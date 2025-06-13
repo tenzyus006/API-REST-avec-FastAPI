@@ -1,0 +1,6 @@
+fastapi
+unicorn
+joblib
+scikit-learn
+sentence-transformers
+numpy
