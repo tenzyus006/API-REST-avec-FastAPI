@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+<<<<<<< HEAD
 import joblib
 
 app = FastAPI()
@@ -8,3 +9,44 @@ model = joblib.load("logistic_model_tfidf.pkl")
 @app.get("/")
 def home():
     return {"message": "API is running!"}
+=======
+from pydantic import BaseModel
+import joblib
+import os
+import requests
+
+LOGISTIC_MODEL_URL = os.getenv("/Users/tenzinwangmo/Library/CloudStorage/GoogleDrive-tenzyus006@gmail.com/My Drive/Colab Notebooks")
+MLB_URL = os.getenv("/Users/tenzinwangmo/Library/CloudStorage/GoogleDrive-tenzyus006@gmail.com/My Drive/Colab Notebooks")
+
+def download_file(url, filename):
+    if url and not os.path.exists(filename):
+        print(f"Downloading {filename} ...")
+        r = requests.get(url)
+        r.raise_for_status()
+        with open(filename, "wb") as f:
+            f.write(r.content)
+        print(f"{filename} downloaded.")
+
+pipeline = None
+mlb = None
+
+app = FastAPI()
+
+@app.on_event("startup")
+def load_models():
+    global pipeline, mlb
+    download_file(LOGISTIC_MODEL_URL, "logistic_model_tfidf.pkl")
+    download_file(MLB_URL, "mlb.pkl")
+    pipeline = joblib.load("logistic_model_tfidf.pkl")
+    mlb = joblib.load("mlb.pkl")
+
+class InputData(BaseModel):
+    text: str
+
+@app.post("/predict")
+def predict(data: InputData):
+    input_text = data.text
+    predicted_binary = pipeline.predict([input_text])
+    predicted_tags = mlb.inverse_transform(predicted_binary)
+    return {"tags": predicted_tags[0] if predicted_tags else []}
+>>>>>>> 05f47935d2314f7b8abc96ce96b7fb3a6bc47de2
