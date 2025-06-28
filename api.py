@@ -7,8 +7,8 @@ import requests
 app = FastAPI()
 
 # Environment variable names (not paths!)
-LOGISTIC_MODEL_URL = os.getenv("LOGISTIC_MODEL_URL")
-MLB_URL = os.getenv("MLB_URL")
+LOGISTIC_MODEL_URL = os.getenv("/Users/tenzinwangmo/Library/CloudStorage/GoogleDrive-tenzyus006@gmail.com/My Drive/Colab Notebooks")
+MLB_URL = os.getenv("/Users/tenzinwangmo/Library/CloudStorage/GoogleDrive-tenzyus006@gmail.com/My Drive/Colab Notebooks")
 
 # Download model files if needed
 def download_file(url, filename):
