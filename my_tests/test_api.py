@@ -11,5 +11,5 @@ def test_predict():
 
 if __name__ == "__main__":
     test_predict()
-    print("✅ Test passed. Tags:", ", ".join(data["tags"]))
+    
 
