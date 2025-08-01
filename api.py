@@ -2,11 +2,16 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
 import os
-import requests
 
 app = FastAPI()
-mlb = joblib.load("mlb.pkl")
-pipeline = joblib.load("logistic_model_tfidf.pkl")
+mlb = None
+pipeline = None
+
+@app.on_event("startup")
+def load_models():
+    global mlb, pipeline
+    mlb = joblib.load("mlb.pkl")
+    pipeline = joblib.load("logistic_model_tfidf.pkl")
 
 @app.get("/")
 def home():
@@ -19,7 +24,6 @@ class InputData(BaseModel):
 def predict(data: InputData):
     if not pipeline or not mlb:
         raise HTTPException(status_code=503, detail="Model not loaded.")
-    
     input_text = data.text
     try:
         predicted_binary = pipeline.predict([input_text])
