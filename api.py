@@ -5,37 +5,8 @@ import os
 import requests
 
 app = FastAPI()
-
-# Environment variable names (these should be URLs)
-LOGISTIC_MODEL_URL = os.getenv("LOGISTIC_MODEL_URL")
-MLB_URL = os.getenv("MLB_URL")
-
-def download_file(url, filename):
-    if url and not os.path.exists(filename):
-        print(f"Downloading {filename} ...")
-        try:
-            r = requests.get(url)
-            r.raise_for_status()
-            with open(filename, "wb") as f:
-                f.write(r.content)
-            print(f"{filename} downloaded.")
-        except requests.RequestException as e:
-            raise RuntimeError(f"Failed to download {filename}: {e}")
-
-pipeline = None
-mlb = None
-
-@app.on_event("startup")
-def load_models():
-    global pipeline, mlb
-    try:
-        download_file(LOGISTIC_MODEL_URL, "logistic_model_tfidf.pkl")
-        download_file(MLB_URL, "mlb.pkl")
-        pipeline = joblib.load("logistic_model_tfidf.pkl")
-        mlb = joblib.load("mlb.pkl")
-        print("Models loaded successfully.")
-    except Exception as e:
-        print(f"Error during model loading: {e}")
+mlb = joblib.load("mlb.pkl")
+pipeline = joblib.load("logistic_model_tfidf.pkl")
 
 @app.get("/")
 def home():
