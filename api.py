@@ -10,8 +10,11 @@ pipeline = None
 @app.on_event("startup")
 def load_models():
     global mlb, pipeline
-    mlb = joblib.load("mlb.pkl")
-    pipeline = joblib.load("logistic_model_tfidf.pkl")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    mlb_path = os.path.join(BASE_DIR, "mlb.pkl")
+    pipeline_path = os.path.join(BASE_DIR, "logistic_model_tfidf.pkl")
+    mlb = joblib.load(mlb_path)
+    pipeline = joblib.load(pipeline_path)
 
 @app.get("/")
 def home():
