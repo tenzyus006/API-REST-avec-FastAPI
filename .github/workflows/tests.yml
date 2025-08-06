@@ -1,11 +1,13 @@
 name: Run FastAPI API Tests
 
-
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   test_api:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -22,7 +24,7 @@ jobs:
       - name: Start FastAPI app
         run: |
           nohup uvicorn api:app --host 127.0.0.1 --port 8000 &
-          sleep 5  # give it time to start
+          sleep 5  # wait for server to start
 
       - name: Run tests
         run: python my_tests/test_api.py
